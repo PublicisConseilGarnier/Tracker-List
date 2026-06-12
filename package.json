@@ -1,0 +1,21 @@
+{
+  "name": "garnier-campaign-tracker",
+  "version": "3.1.0",
+  "description": "Garnier / Publicis Conseil campaign asset tracker — full-stack (Express + Postgres) with shared team state, ready for Render.",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

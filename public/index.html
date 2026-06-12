@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garnier Campaign Asset Tracker — v3.0 Pro</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#4FA847;--brand-dark:#2E7D32;--brand-light:#E8F4E1;--bg:#FAFAFA;--surface:#FFFFFF;--surface-2:#FCFCFC;--border:#E5E7EB;--text:#111827;--text-muted:#6B7280;--text-soft:#9CA3AF;--s-brief:#95A5A6;--s-prep:#3498DB;--s-shoot:#9B59B6;--s-post:#F39C12;--s-valid:#F1C40F;--s-deliv:#4FA847;--s-late:#E74C3C;--shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shadow-lg:0 10px 25px rgba(0,0,0,.08)}
+[data-theme="dark"]{--bg:#0F1419;--surface:#1A1F26;--surface-2:#22272E;--border:#2A2F36;--text:#E5E7EB;--text-muted:#9CA3AF;--text-soft:#6B7280;--brand-light:#1F3A1B;--shadow-sm:0 1px 2px rgba(0,0,0,.3);--shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 10px 25px rgba(0,0,0,.5)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;transition:background .2s,color .2s}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
+a{color:var(--brand);text-decoration:none}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.brand{padding:20px 20px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.brand-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--brand),var(--brand-dark));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
+.brand-name{font-weight:700;font-size:15px}
+.brand-sub{font-size:11px;color:var(--text-soft);margin-top:2px}
+.nav{padding:12px;flex:1;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;color:var(--text-muted);font-weight:500;font-size:13px;margin-bottom:2px;cursor:pointer;width:100%;text-align:left}
+.nav-item:hover{background:var(--surface-2);color:var(--text)}
+.nav-item.active{background:var(--brand-light);color:var(--brand-dark);font-weight:600}
+[data-theme="dark"] .nav-item.active{color:var(--brand)}
+.nav-icon{width:18px;height:18px;flex-shrink:0;opacity:.85}
+.sidebar-footer{padding:12px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--text-soft)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topbar-left{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+.campaign-selector{display:flex;align-items:center;gap:8px;background:var(--brand-light);color:var(--brand-dark);padding:5px 6px 5px 14px;border-radius:20px;font-size:12px;font-weight:600;max-width:340px}
+[data-theme="dark"] .campaign-selector{color:var(--brand)}
+.campaign-selector select{background:transparent;border:none;color:inherit;font-weight:600;font-size:12px;cursor:pointer;outline:none;max-width:200px}
+.campaign-add{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.4);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--brand-dark)}
+[data-theme="dark"] .campaign-add{background:rgba(79,168,71,.2);color:var(--brand)}
+.countdown{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted)}
+.countdown-num{font-weight:700;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.theme-toggle,.sync-indicator{width:34px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.theme-toggle:hover{background:var(--surface-2);color:var(--text)}
+.sync-indicator{position:relative}
+.sync-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--text-soft)}
+.sync-dot.ok{background:var(--brand)}
+.sync-dot.err{background:var(--s-late)}
+.sync-dot.pending{background:var(--s-post);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.user-chip{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--surface-2);border-radius:20px;font-size:12px;font-weight:500}
+.avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.content{flex:1;overflow-y:auto;padding:28px}
+.page{display:none}
+.page.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+.page-title{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.page-sub{font-size:13px;color:var(--text-muted);margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;font-weight:600;font-size:13px;border:1px solid transparent;white-space:nowrap}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-dark)}
+.btn-secondary{background:var(--surface);color:var(--text);border-color:var(--border)}
+.btn-secondary:hover{background:var(--surface-2)}
+.btn-danger{background:var(--s-late);color:#fff}
+.btn-warn{background:var(--s-post);color:#fff}
+.btn-ghost{color:var(--text-muted)}
+.btn-ghost:hover{color:var(--text);background:var(--surface-2)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow-sm)}
+.kpi-label{font-size:12px;color:var(--text-muted);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.kpi-value{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.kpi-trend{font-size:12px;color:var(--text-soft);margin-top:4px}
+.kpi-trend.up{color:var(--brand-dark)}
+[data-theme="dark"] .kpi-trend.up{color:var(--brand)}
+.kpi-trend.down{color:var(--s-late)}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:900px){.chart-grid{grid-template-columns:1fr}}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow-sm)}
+.chart-title{font-size:13px;font-weight:600;margin-bottom:14px}
+.chart-bar{margin-bottom:10px}
+.bar-row{display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px}
+.bar-label{color:var(--text-muted);font-weight:500}
+.bar-value{font-weight:600}
+.bar-track{height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search{flex:1;min-width:220px;position:relative}
+.search input{width:100%;padding:8px 12px 8px 36px;border:1px solid var(--border);border-radius:6px;background:var(--surface);outline:none}
+.search input:focus{border-color:var(--brand)}
+.search::before{content:"";position:absolute;left:12px;top:50%;width:14px;height:14px;transform:translateY(-50%);background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.35-4.35'/></svg>") center/contain no-repeat}
+.filter-select{padding:8px 28px 8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 8px center;background-size:14px;cursor:pointer;font-weight:500}
+.filter-select:focus{outline:none;border-color:var(--brand)}
+.section-group{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.section-head{padding:12px 18px;background:linear-gradient(90deg,var(--brand-dark),var(--brand));color:#fff;font-weight:600;font-size:13px;display:flex;justify-content:space-between;cursor:pointer}
+.section-count{background:rgba(255,255,255,.2);padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600}
+.section-body.collapsed{display:none}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;background:var(--surface-2);border-bottom:1px solid var(--border);font-weight:600;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface-2)}
+.asset-id{font-family:'SF Mono',Monaco,monospace;font-size:12px;font-weight:600;color:var(--brand-dark)}
+[data-theme="dark"] .asset-id{color:var(--brand)}
+.col-desc{max-width:280px;font-weight:500}
+.col-action{text-align:right;white-space:nowrap}
+.s-Brief{background:var(--s-brief)}.s-InPrep{background:var(--s-prep)}.s-Shooting{background:var(--s-shoot)}.s-InPostProd{background:var(--s-post)}.s-Validation{background:var(--s-valid);color:#1F2937 !important}.s-Delivered{background:var(--s-deliv)}.s-Late{background:var(--s-late)}
+.status-select{padding:4px 24px 4px 10px;border:1px solid transparent;border-radius:14px;font-size:11px;font-weight:600;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 6px center;background-size:10px;color:#fff;min-width:110px;outline:none}
+.status-pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.days-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;min-width:50px;text-align:center}
+.days-pill.late{background:#FEE2E2;color:#991B1B}.days-pill.soon{background:#FEF3C7;color:#92400E}.days-pill.ok{background:#D1FAE5;color:#065F46}.days-pill.none{background:#F3F4F6;color:#6B7280}
+[data-theme="dark"] .days-pill.late{background:#451010;color:#FCA5A5}
+[data-theme="dark"] .days-pill.soon{background:#3D2A0A;color:#FCD34D}
+[data-theme="dark"] .days-pill.ok{background:#0F2D1F;color:#6EE7B7}
+[data-theme="dark"] .days-pill.none{background:#22272E;color:#9CA3AF}
+.kantar-badge{display:inline-block;padding:2px 7px;border-radius:8px;font-size:9px;font-weight:700;color:#fff;background:var(--s-shoot);letter-spacing:.05em;text-transform:uppercase}
+.kantar-badge.dash{background:transparent;color:var(--text-soft);font-weight:400}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:12px;font-weight:600;color:var(--text-muted)}
+.form-input,.form-select,.form-textarea{padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);outline:none;font-size:13px}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--brand)}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:var(--shadow-sm)}
+.form-section-title{font-size:14px;font-weight:700;margin-bottom:14px}
+.form-divider{margin:24px 0;border:none;border-top:1px solid var(--border)}
+.milestone-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px}
+.milestone-card{padding:14px;border-radius:10px;background:var(--brand-light);border:1px solid #D6EBCC}
+[data-theme="dark"] .milestone-card{border-color:#2A4A26}
+.milestone-label{font-size:11px;font-weight:700;color:var(--brand-dark);text-transform:uppercase;letter-spacing:.05em}
+[data-theme="dark"] .milestone-label{color:var(--brand)}
+.milestone-date{font-size:18px;font-weight:700;margin-top:4px}
+.milestone-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+.milestone-card.mad{background:#FEE2E2;border-color:#FCA5A5}
+[data-theme="dark"] .milestone-card.mad{background:#451010;border-color:#7F1D1D}
+.milestone-card.mad .milestone-label{color:#991B1B}
+[data-theme="dark"] .milestone-card.mad .milestone-label{color:#FCA5A5}
+.timeline-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:var(--shadow-sm);overflow-x:auto}
+.timeline-track{display:grid;gap:8px;min-width:760px}
+.timeline-col{padding:14px 10px;background:var(--surface-2);border-radius:10px;min-height:380px}
+.timeline-col.mad{background:#FEE2E2}
+[data-theme="dark"] .timeline-col.mad{background:#3A1A1A}
+.timeline-col-header{text-align:center;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.timeline-col-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
+.timeline-col-date{font-size:13px;font-weight:600;margin-top:2px}
+.timeline-asset{padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;font-size:11px;cursor:pointer}
+.timeline-asset:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.timeline-asset-id{font-family:'SF Mono',Monaco,monospace;font-weight:700;color:var(--brand-dark);font-size:10px;margin-bottom:2px}
+[data-theme="dark"] .timeline-asset-id{color:var(--brand)}
+.timeline-asset-desc{font-weight:500;font-size:11px;line-height:1.3}
+.timeline-asset-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:5px}
+.modal-overlay{position:fixed;inset:0;background:rgba(17,24,39,.6);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:100}
+.modal-overlay.show{display:flex;animation:fadeIn .15s}
+.modal{background:var(--surface);border-radius:14px;width:min(520px,calc(100% - 32px));max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:700}
+.modal-close{width:28px;height:28px;border-radius:6px;color:var(--text-muted);font-size:18px}
+.modal-close:hover{background:var(--surface-2);color:var(--text)}
+.modal-body{padding:22px}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.settings-section{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.settings-title{font-size:14px;font-weight:700;margin-bottom:6px}
+.settings-desc{font-size:12px;color:var(--text-muted);margin-bottom:14px}
+.settings-desc code{background:var(--surface-2);padding:2px 6px;border-radius:4px;font-size:11px;font-family:Monaco,monospace}
+.action-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.toast-wrap{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:200;pointer-events:none}
+.toast{background:var(--text);color:var(--bg);padding:12px 18px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);pointer-events:auto;animation:slideIn .25s ease}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+.campaign-list-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface-2);border-radius:8px;margin-bottom:6px}
+.campaign-list-item.active{border:1px solid var(--brand);background:var(--brand-light)}
+[data-theme="dark"] .campaign-list-item.active{background:rgba(79,168,71,.1)}
+.toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px}
+.toggle-switch{width:36px;height:20px;background:var(--border);border-radius:10px;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-switch::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle input:checked+.toggle-switch{background:var(--brand)}
+.toggle input:checked+.toggle-switch::after{transform:translateX(16px)}
+.toggle input{display:none}
+.code-input{font-family:Monaco,monospace;font-size:12px}
+.report-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:48px 56px;box-shadow:var(--shadow-sm);max-width:900px;margin:0 auto}
+.report-brand-bar{height:6px;background:linear-gradient(90deg,var(--brand),var(--brand-dark));border-radius:3px;margin-bottom:32px}
+.report-cover{text-align:center;padding-bottom:32px;border-bottom:1px solid var(--border);margin-bottom:32px}
+.report-eyebrow{font-size:11px;font-weight:700;color:var(--brand-dark);letter-spacing:.15em;text-transform:uppercase;margin-bottom:14px}
+[data-theme="dark"] .report-eyebrow{color:var(--brand)}
+.report-title{font-size:32px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.report-subtitle{font-size:14px;color:var(--text-muted)}
+.report-meta{display:flex;justify-content:center;gap:32px;margin-top:20px;flex-wrap:wrap}
+.report-meta-item{text-align:center}
+.report-meta-label{font-size:10px;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.08em}
+.report-meta-value{font-size:14px;font-weight:700;margin-top:2px}
+.report-section-title{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brand-dark);margin-bottom:18px;padding-bottom:8px;border-bottom:2px solid var(--brand-light)}
+[data-theme="dark"] .report-section-title{color:var(--brand)}
+.report-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:36px}
+.report-stat{padding:14px;background:var(--surface-2);border-radius:8px;text-align:center}
+.report-stat-value{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.report-stat-label{font-size:11px;color:var(--text-muted);font-weight:500;margin-top:4px}
+.report-channel{margin-bottom:28px}
+.report-channel-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--brand-dark)}
+[data-theme="dark"] .report-channel-title{color:var(--brand)}
+.report-table{width:100%;border-collapse:collapse;font-size:12px}
+.report-table th{padding:8px 10px;background:var(--surface-2);text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);font-weight:700}
+.report-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.report-footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--text-muted)}
+@media print{:root{--bg:#fff;--surface:#fff;--text:#000}.sidebar,.topbar,.toolbar,.btn,.toast-wrap,.modal-overlay{display:none !important}.main{overflow:visible}.content{padding:0;overflow:visible}.page{display:none !important}.page#page-report{display:block !important}.report-wrap{box-shadow:none;border:none;padding:32px;max-width:none}.report-channel{page-break-inside:avoid}.report-summary{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:768px){.sidebar{width:60px}.brand-name,.brand-sub,.nav-item span:not(.nav-icon){display:none}.nav-item{justify-content:center}.content{padding:18px}.topbar{padding:12px 18px}.countdown{display:none}.campaign-selector{max-width:180px}.report-wrap{padding:24px}.report-summary{grid-template-columns:repeat(2,1fr)}}
+
+/* ============ v3.0 PREMIUM ADDITIONS ============ */
+/* Animated dynamic background that adapts to the active campaign accent */
+body{position:relative}
+.bg-aura{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;opacity:.55;transition:opacity .6s}
+[data-theme="dark"] .bg-aura{opacity:.4}
+.bg-aura::before,.bg-aura::after{content:"";position:absolute;width:55vw;height:55vw;border-radius:50%;filter:blur(90px);background:var(--accent,var(--brand));animation:aura 22s ease-in-out infinite}
+.bg-aura::before{top:-15vw;left:-10vw}
+.bg-aura::after{bottom:-20vw;right:-12vw;background:var(--accent2,var(--brand-dark));animation-delay:-11s}
+@keyframes aura{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(8vw,4vw) scale(1.12)}66%{transform:translate(-6vw,6vw) scale(.92)}}
+@media print{.bg-aura{display:none}}
+
+/* Glass surfaces */
+.kpi-card,.chart-card{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .25s}
+[data-theme="light"] .kpi-card,[data-theme="light"] .chart-card{background:rgba(255,255,255,.78)}
+[data-theme="dark"] .kpi-card,[data-theme="dark"] .chart-card{background:rgba(26,31,38,.72)}
+/* Premium KPI hover — SaaS lift */
+.kpi-card{position:relative;overflow:hidden;cursor:default}
+.kpi-card::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s}
+.kpi-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--accent,var(--brand))}
+.kpi-card:hover::after{transform:translateX(120%)}
+.kpi-spark{display:flex;align-items:flex-end;gap:3px;height:26px;margin-top:10px}
+.kpi-spark span{flex:1;background:var(--accent,var(--brand));border-radius:2px;opacity:.65;transition:opacity .2s;min-height:3px}
+.kpi-card:hover .kpi-spark span{opacity:1}
+
+/* Release tracking (agency level) */
+.release-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:20px;box-shadow:var(--shadow);position:relative;overflow:hidden;backdrop-filter:blur(8px)}
+[data-theme="dark"] .release-hero{background:rgba(26,31,38,.72)}
+.release-hero-bar{position:absolute;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--accent,var(--brand)),var(--accent2,var(--brand-dark)))}
+.release-hero-top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.release-big{font-size:56px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.release-big small{font-size:24px;font-weight:600;color:var(--text-soft)}
+.release-pct{font-size:15px;font-weight:700;color:var(--brand-dark);background:var(--brand-light);padding:6px 14px;border-radius:20px}
+[data-theme="dark"] .release-pct{color:var(--brand)}
+.release-progress{height:12px;background:var(--surface-2);border-radius:8px;overflow:hidden;margin-top:20px}
+.release-progress-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--accent,var(--brand)),var(--accent2,var(--brand-dark)));transition:width .8s cubic-bezier(.22,1,.36,1)}
+.camp-track-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:12px;box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s;cursor:pointer;backdrop-filter:blur(6px)}
+[data-theme="dark"] .camp-track-card{background:rgba(26,31,38,.7)}
+.camp-track-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.camp-track-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.camp-track-name{font-weight:700;font-size:14px}
+.camp-track-meta{font-size:11px;color:var(--text-muted)}
+.camp-track-bar{height:10px;background:var(--surface-2);border-radius:6px;overflow:hidden}
+.camp-track-fill{height:100%;border-radius:6px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+.camp-stat-row{display:flex;gap:18px;margin-top:10px;font-size:11px;color:var(--text-muted);flex-wrap:wrap}
+.camp-stat-row b{color:var(--text);font-weight:700}
+
+/* Kantar scorecard upload */
+.kantar-upload{margin-top:12px;border:1.5px dashed var(--s-shoot);border-radius:10px;padding:16px;text-align:center;background:rgba(155,89,182,.06);transition:background .2s}
+.kantar-upload.dragover{background:rgba(155,89,182,.16)}
+.kantar-upload-label{font-size:12px;font-weight:600;color:var(--s-shoot);cursor:pointer}
+.kantar-upload-hint{font-size:11px;color:var(--text-muted);margin-top:4px}
+.kantar-preview{margin-top:12px;position:relative;display:inline-block}
+.kantar-preview img{max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--border);display:block}
+.kantar-preview-actions{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.kantar-eye{cursor:pointer;color:var(--s-shoot);font-size:14px;margin-left:4px;vertical-align:middle}
+.kantar-hidden-row{display:none}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;z-index:300;padding:32px;backdrop-filter:blur(4px)}
+.lightbox.show{display:flex;animation:fadeIn .2s}
+.lightbox img{max-width:92%;max-height:88%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lightbox-close{position:absolute;top:24px;right:28px;color:#fff;font-size:32px;cursor:pointer;line-height:1}
+.lightbox-cap{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:#fff;font-size:13px;font-weight:600;opacity:.9}
+
+/* Version history timeline */
+.history-list{display:flex;flex-direction:column;gap:0;position:relative;padding-left:8px}
+.history-item{display:flex;gap:14px;padding:10px 0;position:relative}
+.history-item::before{content:"";position:absolute;left:5px;top:18px;bottom:-10px;width:2px;background:var(--border)}
+.history-item:last-child::before{display:none}
+.history-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:4px;z-index:1;border:2px solid var(--surface)}
+.history-body{flex:1}
+.history-action{font-size:13px;font-weight:600}
+.history-time{font-size:11px;color:var(--text-soft);margin-top:2px}
+.history-note{font-size:12px;color:var(--text-muted);margin-top:3px}
+.history-restore{font-size:11px;color:var(--brand-dark);font-weight:600;cursor:pointer;margin-top:4px;display:inline-block}
+[data-theme="dark"] .history-restore{color:var(--brand)}
+.box-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;background:#0061D5;color:#fff;text-decoration:none}
+.box-pill.muted{background:var(--surface-2);color:var(--text-soft)}
+.report-kantar-img{max-width:280px;border:1px solid var(--border);border-radius:8px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="bg-aura" id="bgAura"></div>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">G</div>
+      <div>
+        <div class="brand-name">Garnier Tracker</div>
+        <div class="brand-sub">Multi-campaign · v3.0 Pro</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-page="dashboard"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span>Dashboard</span></button>
+      <button class="nav-item" data-page="release"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Release Tracking</span></button>
+      <button class="nav-item" data-page="assets"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Asset List</span></button>
+      <button class="nav-item" data-page="brief"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span>Campaign Brief</span></button>
+      <button class="nav-item" data-page="timeline"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg><span>Timeline</span></button>
+      <button class="nav-item" data-page="report"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg><span>Client Report</span></button>
+      <button class="nav-item" data-page="settings"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9l2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9l2.83-2.83"/></svg><span>Settings</span></button>
+    </nav>
+    <div class="sidebar-footer">v3.0 Pro · Made for Nicolas</div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="campaign-selector">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <select id="campaignSelect" onchange="switchCampaign(this.value)"></select>
+          <button class="campaign-add" onclick="openNewCampaignModal()" title="New campaign">+</button>
+        </div>
+        <div class="countdown">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span><span class="countdown-num" id="topDaysToMAD">—</span> days to MAD</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="sync-indicator" onclick="navigate('settings')" title="Cloud sync status">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+          <span class="sync-dot" id="syncDot"></span>
+        </button>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+          <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9l2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9l2.83-2.83"/></svg>
+        </button>
+        <div class="user-chip"><div class="avatar">NL</div><span>Nicolas Lefebvre</span></div>
+      </div>
+    </header>
+    <section class="content">
+      <div class="page active" id="page-dashboard">
+        <div class="page-header"><div><div class="page-title">Dashboard</div><div class="page-sub">Real-time campaign overview</div></div></div>
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="chart-grid">
+          <div class="chart-card"><div class="chart-title">By Status</div><div id="chartStatus"></div></div>
+          <div class="chart-card"><div class="chart-title">By Channel</div><div id="chartChannel"></div></div>
+        </div>
+        <div class="chart-card"><div class="chart-title">By Category</div><div id="chartCategory"></div></div>
+      </div>
+      <div class="page" id="page-release">
+        <div class="page-header"><div><div class="page-title">Release Tracking</div><div class="page-sub">Agency-wide delivery across all Publicis Conseil campaigns</div></div>
+          <button class="btn btn-secondary" onclick="exportClientPDF()">📄 Export agency PDF</button>
+        </div>
+        <div id="releaseContent"></div>
+      </div>
+      <div class="page" id="page-assets">
+        <div class="page-header">
+          <div><div class="page-title">Asset List</div><div class="page-sub" id="assetsCount">— assets</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-secondary" onclick="autoFlagLate()">⚠ Auto-flag Late</button>
+            <button class="btn btn-warn" onclick="sendWeeklyRecap()">📧 Weekly Recap</button>
+            <button class="btn btn-primary" onclick="openAddModal()">+ New Asset</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search"><input type="text" id="searchInput" placeholder="Search assets, talent, hero product…" oninput="renderAssets()"></div>
+          <select class="filter-select" id="filterCategory" onchange="renderAssets()"><option value="">All categories</option><option>HAIRCARE</option><option>SKINCARE</option><option>BRAND</option><option>HAIRCOLOR</option></select>
+          <select class="filter-select" id="filterStatus" onchange="renderAssets()"><option value="">All statuses</option><option>Brief</option><option>In Prep</option><option>Shooting</option><option>In Post-Prod</option><option>Validation</option><option>Delivered</option><option>Late</option></select>
+          <select class="filter-select" id="filterRegion" onchange="renderAssets()"><option value="">All regions</option><option>US</option><option>EU</option><option>LATAM</option><option>WW</option><option>APAC</option></select>
+          <label class="toggle" style="margin-left:8px">
+            <input type="checkbox" id="filterKantar" onchange="renderAssets()">
+            <span class="toggle-switch"></span>
+            <span style="font-size:12px;color:var(--text-muted);font-weight:500">Kantar only</span>
+          </label>
+        </div>
+        <div id="assetsContainer"></div>
+      </div>
+      <div class="page" id="page-brief">
+        <div class="page-header"><div><div class="page-title">Campaign Brief</div><div class="page-sub">Define this campaign — milestones update automatically</div></div></div>
+        <div class="form-card">
+          <div class="form-section-title">Campaign details</div>
+          <div class="form-grid">
+            <div class="form-group full"><label class="form-label">Campaign name</label><input class="form-input" id="brief-name"></div>
+            <div class="form-group"><label class="form-label">Brand</label><input class="form-input" id="brief-brand"></div>
+            <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="brief-category"><option>HAIRCARE</option><option>SKINCARE</option><option>BRAND</option><option>HAIRCOLOR</option></select></div>
+            <div class="form-group"><label class="form-label">Sub-brand / Range</label><input class="form-input" id="brief-subbrand"></div>
+            <div class="form-group"><label class="form-label">Hero product(s)</label><input class="form-input" id="brief-hero"></div>
+            <div class="form-group"><label class="form-label">Campaign type</label><select class="form-select" id="brief-type"><option>Hero</option><option>Emerging</option><option>Always-On</option><option>Launch</option><option>Relaunch</option></select></div>
+            <div class="form-group"><label class="form-label">Regions covered</label><input class="form-input" id="brief-regions"></div>
+            <div class="form-group"><label class="form-label">Lead agency</label><input class="form-input" id="brief-agency"></div>
+            <div class="form-group"><label class="form-label">Post-prod partner</label><input class="form-input" id="brief-postprod"></div>
+            <div class="form-group"><label class="form-label">Campaign lead</label><input class="form-input" id="brief-lead"></div>
+            <div class="form-group"><label class="form-label">Client lead</label><input class="form-input" id="brief-client"></div>
+            <div class="form-group"><label class="form-label">MAD date</label><input class="form-input" type="date" id="brief-mad"></div>
+          </div>
+          <hr class="form-divider">
+          <div class="form-section-title">Auto-calculated milestones</div>
+          <div class="milestone-grid" id="milestoneGrid"></div>
+        </div>
+      </div>
+      <div class="page" id="page-timeline">
+        <div class="page-header"><div><div class="page-title">Timeline</div><div class="page-sub">Visual delivery schedule from M-5 to MAD</div></div></div>
+        <div class="timeline-wrap"><div class="timeline-track" id="timelineTrack"></div></div>
+      </div>
+      <div class="page" id="page-report">
+        <div class="page-header">
+          <div><div class="page-title">Client Report</div><div class="page-sub">Print-ready PDF for Garnier</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary" onclick="exportClientPDF()">📄 Download clean PDF</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save as PDF</button>
+          </div>
+        </div>
+        <div id="reportContent"></div>
+      </div>
+      <div class="page" id="page-settings">
+        <div class="page-header"><div><div class="page-title">Settings</div><div class="page-sub">Campaigns, sync, integrations, data</div></div></div>
+        <div class="settings-section">
+          <div class="settings-title">📂 Manage campaigns</div>
+          <div class="settings-desc">Switch, rename, duplicate or delete campaigns.</div>
+          <div id="campaignList"></div>
+          <div class="action-row" style="margin-top:12px"><button class="btn btn-primary btn-sm" onclick="openNewCampaignModal()">+ New campaign</button></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">☁️ Cloud sync (Supabase)</div>
+          <div class="settings-desc">Share campaigns in real time with your team. See <code>INTEGRATIONS.md</code> for the full setup guide.</div>
+          <div class="form-grid">
+            <div class="form-group full"><label class="form-label">Supabase URL</label><input class="form-input code-input" id="supabaseUrl" placeholder="https://xxxxx.supabase.co"></div>
+            <div class="form-group full"><label class="form-label">Supabase Anon Key</label><input class="form-input code-input" id="supabaseKey" placeholder="eyJhbGciOiJI..."></div>
+            <div class="form-group full">
+              <label class="toggle"><input type="checkbox" id="autoSyncToggle" onchange="toggleAutoSync(this.checked)"><span class="toggle-switch"></span><span>Auto-sync every 30 seconds</span></label>
+            </div>
+          </div>
+          <div class="action-row" style="margin-top:14px">
+            <button class="btn btn-primary btn-sm" onclick="pushToCloud()">⬆ Push to cloud</button>
+            <button class="btn btn-secondary btn-sm" onclick="pullFromCloud()">⬇ Pull from cloud</button>
+            <span id="syncStatus" style="font-size:12px;color:var(--text-muted);margin-left:8px"></span>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">📦 Box integration</div>
+          <div class="settings-desc">Paste a Box Developer Token to enable auto-generation of Box shared links from File IDs. Get a 60-min token at <code>app.box.com/developers/console</code>.</div>
+          <div class="form-group full"><label class="form-label">Box Developer Token</label><input class="form-input code-input" id="boxToken" placeholder="Bearer token..."></div>
+          <div class="form-group full"><label class="form-label">Parent folder ID (for auto-created GAR-ID folders)</label><input class="form-input code-input" id="boxParentId" placeholder="0 = root, or paste a folder ID"></div>
+          <div class="action-row" style="margin-top:12px"><button class="btn btn-secondary btn-sm" onclick="saveBoxToken()">Save token &amp; parent</button></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">📧 SendGrid (advanced)</div>
+          <div class="settings-desc">For automated weekly emails. Requires deploying a Netlify Function (see <code>INTEGRATIONS.md</code>).</div>
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label">Recipient(s)</label><input class="form-input" id="sgRecipients" placeholder="garnier-team@..."></div>
+            <div class="form-group"><label class="form-label">From email</label><input class="form-input" id="sgFrom" placeholder="nicolas@publicis..."></div>
+          </div>
+          <div class="action-row" style="margin-top:12px"><button class="btn btn-secondary btn-sm" onclick="saveSendgridConfig()">Save config</button></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">📥 Export data</div>
+          <div class="settings-desc">Download all campaigns and settings as JSON.</div>
+          <div class="action-row"><button class="btn btn-primary btn-sm" onclick="exportData()">Export JSON</button></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">📤 Import data</div>
+          <div class="settings-desc">Replace all data with a JSON backup file.</div>
+          <div class="action-row">
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importFile').click()">Choose JSON file…</button>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">🗑 Reset</div>
+          <div class="settings-desc">Wipe all campaigns and reset to default seed.</div>
+          <div class="action-row"><button class="btn btn-danger btn-sm" onclick="resetData()">Reset all data</button></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">About</div>
+          <div class="settings-desc">Garnier Campaign Asset Tracker v3.0 Pro · Multi-campaign · Release tracking · Asset versioning · Kantar scorecards (base64) · Box auto-folder by GAR-ID · Clean client PDF · Animated UI · Supabase sync · Built for Nicolas Lefebvre · Publicis Conseil · 2026</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modalDelivered">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">✓ Mark as Delivered</div><button class="modal-close" onclick="closeModal('modalDelivered')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label" id="deliveredAssetLabel">Asset</label></div>
+      <div class="form-group" style="margin-top:12px"><label class="form-label">Box shared link</label><input class="form-input" id="deliveredBoxLink" placeholder="https://app.box.com/s/..."></div>
+      <div class="form-group" style="margin-top:12px">
+        <label class="form-label">Or generate from Box File ID</label>
+        <div style="display:flex;gap:8px"><input class="form-input code-input" id="deliveredBoxFileId" placeholder="123456789" style="flex:1"><button class="btn btn-secondary btn-sm" onclick="generateBoxLink()">Generate</button></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Requires Box token in Settings → Box integration</div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modalDelivered')">Cancel</button><button class="btn btn-primary" onclick="confirmDelivered()">Mark Delivered</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalAdd">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">+ Add new asset</div><button class="modal-close" onclick="closeModal('modalAdd')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="add-category"><option>HAIRCARE</option><option>SKINCARE</option><option>BRAND</option><option>HAIRCOLOR</option></select></div>
+        <div class="form-group"><label class="form-label">Region</label><select class="form-select" id="add-region"><option>US</option><option>EU</option><option>LATAM</option><option>WW</option><option>APAC</option></select></div>
+        <div class="form-group"><label class="form-label">Channel</label><select class="form-select" id="add-channel"><option>POS</option><option>TVC</option><option>Digital</option><option>Social</option><option>E-com</option><option>Brand Page</option><option>OOH</option><option>DOOH</option></select></div>
+        <div class="form-group"><label class="form-label">Asset type</label><select class="form-select" id="add-type"><option>Master</option><option>Cutdown</option><option>Digital Native</option><option>Still</option><option>Guidelines</option><option>Capsule</option></select></div>
+        <div class="form-group full"><label class="form-label">Description</label><input class="form-input" id="add-desc" placeholder="e.g. Main Film — people story"></div>
+        <div class="form-group"><label class="form-label">Hero product</label><input class="form-input" id="add-hero"></div>
+        <div class="form-group"><label class="form-label">Format</label><select class="form-select" id="add-format"><option>16x9</option><option>9x16</option><option>4x5</option><option>1x1</option><option>800x450</option><option>1080x1080</option><option>Print</option></select></div>
+        <div class="form-group"><label class="form-label">Duration</label><select class="form-select" id="add-duration"><option>6s</option><option>10s</option><option>15s</option><option>20s</option><option>30s</option><option>45s</option><option>60s</option><option>n/a</option></select></div>
+        <div class="form-group"><label class="form-label">Priority</label><select class="form-select" id="add-priority"><option>High</option><option>Medium</option><option>Low</option></select></div>
+        <div class="form-group full" style="background:var(--surface-2);padding:12px;border-radius:8px;border:1px solid var(--border)">
+          <label class="toggle">
+            <input type="checkbox" id="add-kantar">
+            <span class="toggle-switch"></span>
+            <span><b>Kantar Test format</b> — this asset goes through Kantar (Link / Link+) pre-testing</span>
+          </label>
+        </div>
+        <div class="form-group full"><label class="form-label">Initial status</label><select class="form-select" id="add-status"><option>Brief</option><option>In Prep</option><option>Shooting</option><option>In Post-Prod</option><option>Validation</option><option>Delivered</option><option>Late</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modalAdd')">Cancel</button><button class="btn btn-primary" onclick="confirmAdd()">Add asset</button></div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="modalEdit">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">✏️ Edit asset <span id="editAssetId" style="color:var(--brand-dark);font-family:Monaco,monospace;font-size:13px;margin-left:6px"></span></div><button class="modal-close" onclick="closeModal('modalEdit')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="edit-category"><option>HAIRCARE</option><option>SKINCARE</option><option>BRAND</option><option>HAIRCOLOR</option></select></div>
+        <div class="form-group"><label class="form-label">Region</label><select class="form-select" id="edit-region"><option>US</option><option>EU</option><option>LATAM</option><option>WW</option><option>APAC</option></select></div>
+        <div class="form-group"><label class="form-label">Channel</label><select class="form-select" id="edit-channel"><option>POS</option><option>TVC</option><option>Digital</option><option>Social</option><option>E-com</option><option>Brand Page</option><option>OOH</option><option>DOOH</option></select></div>
+        <div class="form-group"><label class="form-label">Asset type</label><select class="form-select" id="edit-type"><option>Master</option><option>Cutdown</option><option>Digital Native</option><option>Still</option><option>Guidelines</option><option>Capsule</option></select></div>
+        <div class="form-group full"><label class="form-label">Description</label><input class="form-input" id="edit-desc"></div>
+        <div class="form-group"><label class="form-label">Hero product</label><input class="form-input" id="edit-hero"></div>
+        <div class="form-group"><label class="form-label">Format</label><select class="form-select" id="edit-format"><option>16x9</option><option>9x16</option><option>4x5</option><option>1x1</option><option>800x450</option><option>1080x1080</option><option>Print</option></select></div>
+        <div class="form-group"><label class="form-label">Duration</label><select class="form-select" id="edit-duration"><option>6s</option><option>10s</option><option>15s</option><option>20s</option><option>30s</option><option>45s</option><option>60s</option><option>n/a</option></select></div>
+        <div class="form-group"><label class="form-label">Priority</label><select class="form-select" id="edit-priority"><option>High</option><option>Medium</option><option>Low</option></select></div>
+        <div class="form-group"><label class="form-label">Talent</label><input class="form-input" id="edit-talent"></div>
+        <div class="form-group"><label class="form-label">Hair Style / Look</label><input class="form-input" id="edit-look"></div>
+        <div class="form-group"><label class="form-label">Shot At</label><select class="form-select" id="edit-shotat"><option>MIAMI</option><option>XR</option><option>Pack Shoot</option><option>Studio Paris</option><option>Other</option></select></div>
+        <div class="form-group"><label class="form-label">VO / Sound</label><select class="form-select" id="edit-vo"><option>VO Talent</option><option>IA VO Delivery</option><option>Only Music &amp; Sound</option><option>n/a</option></select></div>
+        <div class="form-group"><label class="form-label">Owner</label><select class="form-select" id="edit-owner"><option>Publicis</option><option>TEVA</option><option>Prodigious</option><option>BX team</option><option>Digital Agency</option><option>CDMO</option><option>Other</option></select></div>
+        <div class="form-group full"><label class="form-label">Comments</label><input class="form-input" id="edit-comments"></div>
+        <div class="form-group full" style="background:var(--surface-2);padding:12px;border-radius:8px;border:1px solid var(--border)">
+          <label class="toggle"><input type="checkbox" id="edit-kantar" onchange="toggleKantarUpload()"><span class="toggle-switch"></span><span><b>Kantar Test format</b> — this asset goes through Kantar (Link / Link+) pre-testing</span></label>
+          <div id="kantarUploadZone" class="kantar-upload kantar-hidden-row" style="margin-top:14px">
+            <input type="file" id="kantarFileInput" accept="image/png,image/jpeg,image/jpg" style="display:none" onchange="handleKantarFile(event)">
+            <div class="kantar-upload-label" onclick="document.getElementById('kantarFileInput').click()">📊 Upload Kantar scorecard (PNG / JPG)</div>
+            <div class="kantar-upload-hint">Stored locally (base64) · drag &amp; drop or click · replaceable anytime</div>
+            <div id="kantarPreview"></div>
+          </div>
+        </div>
+        <div class="form-group full"><label class="form-label">Status</label><select class="form-select" id="edit-status"><option>Brief</option><option>In Prep</option><option>Shooting</option><option>In Post-Prod</option><option>Validation</option><option>Delivered</option><option>Late</option></select></div>
+        <div class="form-group full" style="background:var(--surface-2);padding:12px;border-radius:8px;border:1px solid var(--border)">
+          <label class="form-label" style="display:flex;align-items:center;gap:8px"><span class="box-pill">BOX</span> Asset folder (auto by GAR-ID)</label>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+            <input class="form-input code-input" id="edit-boxlink" placeholder="https://app.box.com/folder/..." style="flex:1;min-width:200px">
+            <button class="btn btn-secondary btn-sm" type="button" onclick="autoCreateBoxFolder()">⚡ Auto-create folder</button>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Creates a Box folder named after this GAR-ID under your parent folder (Settings → Box). Falls back to a manual link if no token.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:space-between">
+      <button class="btn btn-danger btn-sm" onclick="deleteAssetFromModal()">🗑 Delete asset</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" onclick="closeModal('modalEdit')">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmEdit()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalNewCampaign">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">+ New campaign</div><button class="modal-close" onclick="closeModal('modalNewCampaign')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label class="form-label">Campaign name</label><input class="form-input" id="nc-name" placeholder="e.g. Olia Hyaluronic Launch"></div>
+        <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="nc-category"><option>HAIRCARE</option><option>SKINCARE</option><option>BRAND</option><option>HAIRCOLOR</option></select></div>
+        <div class="form-group"><label class="form-label">MAD date</label><input class="form-input" type="date" id="nc-mad"></div>
+        <div class="form-group full">
+          <label class="toggle"><input type="checkbox" id="nc-template" checked><span class="toggle-switch"></span><span>Start with a typical asset template (TVC + POS + Digital + Social)</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modalNewCampaign')">Cancel</button><button class="btn btn-primary" onclick="confirmNewCampaign()">Create campaign</button></div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close">×</span>
+  <img id="lightboxImg" src="" alt="Kantar scorecard">
+  <div class="lightbox-cap" id="lightboxCap"></div>
+</div>
+
+<div class="modal-overlay" id="modalHistory">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">🕓 Version history <span id="historyAssetId" style="color:var(--brand-dark);font-family:Monaco,monospace;font-size:13px;margin-left:6px"></span></div><button class="modal-close" onclick="closeModal('modalHistory')">×</button></div>
+    <div class="modal-body"><div class="history-list" id="historyList"></div></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<script>
+const STORAGE_KEY='garnierTrackerV21';
+const STATUS_LIST=['Brief','In Prep','Shooting','In Post-Prod','Validation','Delivered','Late'];
+const STATUS_CLASS={'Brief':'s-Brief','In Prep':'s-InPrep','Shooting':'s-Shooting','In Post-Prod':'s-InPostProd','Validation':'s-Validation','Delivered':'s-Delivered','Late':'s-Late'};
+const CHANNELS=['TVC','POS','Digital','Social','E-com','Brand Page','OOH','DOOH'];
+const MILESTONE_MONTHS={'M-5':5,'M-4':4,'M-2':2,'M-1':1,'MAD':0};
+
+function milestoneFor(channel,type,desc){
+  if(channel==='POS')return 'M-5';
+  if(channel==='TVC'&&(type==='Master'||type==='Cutdown'))return 'M-1';
+  if(channel==='Digital'&&(type==='Master'||type==='Cutdown'))return (desc&&desc.toLowerCase().includes('craft'))?'M-1':'M-4';
+  if(channel==='E-com')return 'M-4';
+  if(['Brand Page','Social','OOH','DOOH'].includes(channel))return 'M-2';
+  return 'M-2';
+}
+
+// Seed format: [category,region,channel,type,desc,hero,format,duration,talent,priority,status,kantar]
+const SEED_FRUCTIS=[
+['HAIRCARE','US','TVC','Master','Main Film — people story','Surfer Spray','16x9','30s','Gisele, Gabriel','High','In Post-Prod',true],
+['HAIRCARE','US','TVC','Cutdown','Main Film cutdown — full story','Shampoo','16x9','20s','Guy + latina','High','Validation',true],
+['HAIRCARE','EU','TVC','Cutdown','Main Film cutdown (Spanish)','Mermaid Gloss','16x9','20s','Jana','High','Shooting',false],
+['HAIRCARE','LATAM','TVC','Master','Full story RANGE','Range','16x9','30s','Gisele, Gabriel','High','Brief',false],
+['HAIRCARE','US','POS','Still','POS Range — Gisele','Range','800x450','n/a','Gisele','High','Delivered',false],
+['HAIRCARE','EU','POS','Still','POS Surfer Spray — Gabriel','Surfer Spray','Print','n/a','Gabriel','High','In Prep',false],
+['HAIRCARE','LATAM','POS','Still','POS Gloss — Brunette','Mermaid Gloss','Print','n/a','Brunette','Medium','Brief',false],
+['HAIRCARE','US','Digital','Cutdown','Cutdown — HTN / science story','Mermaid Gloss','9x16','15s','Latina','Medium','In Post-Prod',false],
+['HAIRCARE','US','Digital','Cutdown','Cutdown — pack + texture','Surfer Spray','4x5','6s','Gisele, Gabriel','Medium','In Prep',false],
+['HAIRCARE','EU','Digital','Cutdown','Cutdown — full story','Surfer Spray','9x16','15s','model','Medium','Brief',false],
+['HAIRCARE','US','Social','Master','B&A — Mermaid Gloss — Jana','Mermaid Gloss','9x16','6s','Jana','High','Validation',false],
+['HAIRCARE','US','Social','Master','Unleash your inner surfer — Madison','Surfer Spray','9x16','15s','Madison','High','Shooting',false],
+['HAIRCARE','EU','Social','Master','Get the look — glossy sculpted waves','Mermaid Gloss','9x16','15s','Jana','Medium','In Prep',false],
+['HAIRCARE','US','Social','Master','Teaser hair result — Gisele','Surfer Spray','9x16','6s','Gisele','Low','Delivered',false],
+['HAIRCARE','US','Brand Page','Guidelines','AMP Stories — brand page kit','Range','9x16','n/a','n/a','Medium','In Prep',false],
+['HAIRCARE','US','E-com','Master','E-com ATF video','Range','16x9','15s','model','High','Brief',false],
+['HAIRCARE','EU','E-com','Master','E-com PDP banners','Range','1080x1080','n/a','n/a','Medium','Late',false],
+['HAIRCARE','US','OOH','Still','OOH branded — Range','Range','Print','n/a','Gisele','High','In Prep',false],
+['HAIRCARE','EU','DOOH','Master','DOOH branded — Range','Range','16x9','15s','n/a','High','Brief',false],
+['HAIRCARE','WW','Brand Page','Guidelines','Website / SEO guidelines','Range','Print','n/a','n/a','Low','Brief',false]
+];
+const SEED_NUTRISSE=[
+['HAIRCOLOR','EU','TVC','Master','Hero film - color reveal','Nutrisse Crème','16x9','30s','Eva Mendes','High','In Prep',true],
+['HAIRCOLOR','EU','TVC','Cutdown','Cutdown - 20s','Nutrisse Crème','16x9','20s','Eva Mendes','High','Brief',false],
+['HAIRCOLOR','US','POS','Still','POS - shade range','Nutrisse Crème','Print','n/a','model','Medium','Brief',false],
+['HAIRCOLOR','EU','Digital','Cutdown','Cutdown - shade testimonials','Nutrisse Crème','9x16','15s','real users','Medium','Brief',false],
+['HAIRCOLOR','EU','Social','Master','Tuto - color refresh','Nutrisse Crème','9x16','15s','creator','High','Brief',false],
+['HAIRCOLOR','EU','Social','Master','B&A - red shade','Nutrisse Crème','9x16','6s','creator','Medium','Brief',false],
+['HAIRCOLOR','EU','Brand Page','Guidelines','PDP refresh','Range','1080x1080','n/a','n/a','Low','Brief',false],
+['HAIRCOLOR','EU','E-com','Master','E-com ATF video','Range','16x9','15s','model','Medium','Brief',false]
+];
+const TEMPLATE_ASSETS=[
+['HAIRCARE','EU','TVC','Master','Hero TVC Master','','16x9','30s','','High','Brief',false],
+['HAIRCARE','EU','TVC','Cutdown','TVC Cutdown 20s','','16x9','20s','','High','Brief',false],
+['HAIRCARE','EU','POS','Still','POS Range','','Print','n/a','','High','Brief',false],
+['HAIRCARE','EU','Digital','Cutdown','Digital Cutdown','','9x16','15s','','Medium','Brief',false],
+['HAIRCARE','EU','Social','Master','Social Master','','9x16','15s','','Medium','Brief',false],
+['HAIRCARE','EU','E-com','Master','E-com ATF','','16x9','15s','','Medium','Brief',false]
+];
+
+function newCampaign(name,brand,category,mad,assetsSeed){
+  const c={id:'c_'+Math.random().toString(36).substr(2,9),
+    brief:{name,brand:brand||'Garnier',category,subbrand:'',hero:'',type:'Hero',regions:'EU',agency:'Publicis',postprod:'Prodigious',lead:'Nicolas Lefebvre',client:'',mad},
+    assets:[],nextId:1,createdAt:new Date().toISOString()};
+  (assetsSeed||[]).forEach(row=>c.assets.push(makeAsset(c.nextId++,...row)));
+  return c;
+}
+function makeAsset(id,category,region,channel,type,desc,hero,format,duration,talent,priority,status,kantar){
+  return {id:'GAR-'+String(id).padStart(3,'0'),nid:id,category,region,channel,assetType:type,
+    description:desc,heroProduct:hero,format,duration,talent,priority,status,
+    kantar:!!kantar, boxLink:'',boxFolderId:'',kantarImage:null,kantarImageName:'',history:[{ts:new Date().toISOString(),action:'Created',status,note:''}],lastUpdate:new Date().toISOString().slice(0,10)};
+}
+function defaultState(){
+  const c1=newCampaign('Fructis Electrolytes Moisture Waves','Garnier','HAIRCARE','2026-09-01',SEED_FRUCTIS);
+  c1.brief.subbrand='Fructis';c1.brief.hero='Surfer Spray, Mermaid Gloss';c1.brief.regions='US / EU / LATAM';
+  const c2=newCampaign('Nutrisse Color Reveal','Garnier','HAIRCOLOR','2026-11-15',SEED_NUTRISSE);
+  c2.brief.subbrand='Nutrisse';c2.brief.hero='Nutrisse Crème';
+  return {version:21,activeCampaignId:c1.id,theme:'light',campaigns:[c1,c2],
+    integrations:{supabase:{url:'',key:'',autoSync:false},box:{token:'',parentId:'0'},sendgrid:{recipients:'',from:''}}};
+}
+
+let state=loadState();migrateAssets();let pendingDeliveredId=null;let syncTimer=null;
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){const s=JSON.parse(raw);if(s.campaigns)return s;}
+    const v2=localStorage.getItem('garnierTrackerV2');
+    if(v2){const s=JSON.parse(v2);if(s.campaigns){s.campaigns.forEach(c=>c.assets.forEach(a=>{if(a.kantar===undefined)a.kantar=false;}));return s;}}
+    const v1=localStorage.getItem('garnierTracker');
+    if(v1){const old=JSON.parse(v1);if(old.brief&&Array.isArray(old.assets)){old.assets.forEach(a=>{if(a.kantar===undefined)a.kantar=false;});
+      const c={id:'c_migrated',brief:old.brief,assets:old.assets,nextId:old.nextId||old.assets.length+1,createdAt:new Date().toISOString()};
+      return {version:21,activeCampaignId:c.id,theme:'light',campaigns:[c],integrations:{supabase:{url:'',key:'',autoSync:false},box:{token:''},sendgrid:{recipients:'',from:''}}};}}
+  }catch(e){console.warn(e);}
+  return defaultState();
+}
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function migrateAssets(){if(!state.integrations)state.integrations={supabase:{url:'',key:'',autoSync:false},box:{token:'',parentId:'0'},sendgrid:{recipients:'',from:''}};if(!state.integrations.box)state.integrations.box={token:'',parentId:'0'};state.campaigns.forEach(c=>c.assets.forEach(a=>{if(a.kantar===undefined)a.kantar=false;if(a.kantarImage===undefined)a.kantarImage=null;if(a.kantarImageName===undefined)a.kantarImageName='';if(a.boxFolderId===undefined)a.boxFolderId='';if(!Array.isArray(a.history))a.history=[{ts:a.lastUpdate?new Date(a.lastUpdate).toISOString():new Date().toISOString(),action:'Created',status:a.status,note:''}];}));if(!state.integrations.box.parentId)state.integrations.box.parentId='0';}
+function toast(msg){const w=document.getElementById('toastWrap');const t=document.createElement('div');t.className='toast';t.textContent=msg;w.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2200);}
+function getCurrent(){return state.campaigns.find(c=>c.id===state.activeCampaignId)||state.campaigns[0];}
+function switchCampaign(id){state.activeCampaignId=id;saveState();renderAll();toast(`Switched to: ${getCurrent().brief.name}`);}
+
+function navigate(p){
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.page===p));
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.toggle('active',pg.id==='page-'+p));
+  if(p==='dashboard')renderDashboard();
+  if(p==='release')renderReleaseTracking();
+  if(p==='assets')renderAssets();
+  if(p==='brief')renderBrief();
+  if(p==='timeline')renderTimeline();
+  if(p==='report')renderReport();
+  if(p==='settings')renderSettings();
+}
+document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.page)));
+
+function madDate(){return new Date(getCurrent().brief.mad);}
+function milestoneDate(m){const d=madDate();d.setMonth(d.getMonth()-MILESTONE_MONTHS[m]);return d;}
+function fmtDate(d){if(!d||isNaN(d))return '—';return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+function daysBetween(d1,d2){return Math.round((d2-d1)/(1000*60*60*24));}
+function dlvFor(a){const m=milestoneFor(a.channel,a.assetType,a.description);return{milestone:m,date:milestoneDate(m)};}
+function daysToDLV(a){return daysBetween(new Date(),dlvFor(a).date);}
+
+const CATEGORY_ACCENT={'HAIRCARE':['#4FA847','#2E7D32'],'SKINCARE':['#3498DB','#1F6FB0'],'BRAND':['#9B59B6','#6C3483'],'HAIRCOLOR':['#E67E22','#B9610E']};
+function setAccent(){const cat=getCurrent().brief.category||'HAIRCARE';const [a1,a2]=CATEGORY_ACCENT[cat]||CATEGORY_ACCENT['HAIRCARE'];document.documentElement.style.setProperty('--accent',a1);document.documentElement.style.setProperty('--accent2',a2);}
+
+function renderTopbar(){
+  const sel=document.getElementById('campaignSelect');
+  sel.innerHTML=state.campaigns.map(c=>`<option value="${c.id}" ${c.id===state.activeCampaignId?'selected':''}>${escapeHtml(c.brief.name)}</option>`).join('');
+  const days=daysBetween(new Date(),madDate());
+  document.getElementById('topDaysToMAD').textContent=isNaN(days)?'—':days;
+  setAccent();
+}
+
+function renderDashboard(){
+  const assets=getCurrent().assets;
+  const total=assets.length;
+  const delivered=assets.filter(a=>a.status==='Delivered').length;
+  const overdue=assets.filter(a=>a.status!=='Delivered'&&daysToDLV(a)<0).length;
+  const dueSoon=assets.filter(a=>a.status!=='Delivered'&&daysToDLV(a)>=0&&daysToDLV(a)<=7).length;
+  const kantarCount=assets.filter(a=>a.kantar).length;
+  const pctDeliv=total>0?Math.round(delivered/total*100):0;
+  const pctKantar=total>0?Math.round(kantarCount/total*100):0;
+  document.getElementById('kpiGrid').innerHTML=`
+    <div class="kpi-card"><div class="kpi-label">Total assets</div><div class="kpi-value">${total}</div><div class="kpi-trend">across ${new Set(assets.map(a=>a.channel)).size} channels</div></div>
+    <div class="kpi-card"><div class="kpi-label">Delivered</div><div class="kpi-value" style="color:var(--accent)">${pctDeliv}%</div><div class="kpi-trend up">${delivered} of ${total}</div>${sparkBars(assets)}</div>
+    <div class="kpi-card"><div class="kpi-label">Overdue</div><div class="kpi-value" style="color:var(--s-late)">${overdue}</div><div class="kpi-trend ${overdue>0?'down':''}">past DLV date</div></div>
+    <div class="kpi-card"><div class="kpi-label">Due in 7 days</div><div class="kpi-value" style="color:var(--s-post)">${dueSoon}</div><div class="kpi-trend">incoming this week</div></div>
+    <div class="kpi-card"><div class="kpi-label">Kantar tested</div><div class="kpi-value" style="color:var(--s-shoot)">${kantarCount}</div><div class="kpi-trend">${pctKantar}% of assets</div></div>`;
+  document.getElementById('chartStatus').innerHTML=renderBarChart(assets,'status',STATUS_LIST,total);
+  document.getElementById('chartChannel').innerHTML=renderBarChart(assets,'channel',CHANNELS,total);
+  document.getElementById('chartCategory').innerHTML=renderBarChart(assets,'category',['HAIRCARE','SKINCARE','BRAND','HAIRCOLOR'],total);
+}
+function renderBarChart(data,key,order,total){
+  const colors={'status':{'Brief':'var(--s-brief)','In Prep':'var(--s-prep)','Shooting':'var(--s-shoot)','In Post-Prod':'var(--s-post)','Validation':'var(--s-valid)','Delivered':'var(--s-deliv)','Late':'var(--s-late)'},'channel':{},'category':{}};
+  let html='';
+  order.forEach((k,i)=>{
+    const count=data.filter(a=>a[key]===k).length;
+    const pct=total>0?Math.round(count/total*100):0;
+    const color=colors[key][k]||`hsl(${140+i*25},35%,50%)`;
+    html+=`<div class="chart-bar"><div class="bar-row"><span class="bar-label">${k}</span><span class="bar-value">${count} · ${pct}%</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div></div>`;
+  });
+  return html;
+}
+
+/* ============ v3.0 FEATURE FUNCTIONS ============ */
+function sparkBars(assets){
+  const cols=['M-5','M-4','M-2','M-1','MAD'];
+  const counts=cols.map(m=>{const list=assets.filter(a=>dlvFor(a).milestone===m);const d=list.filter(a=>a.status==='Delivered').length;return list.length?Math.round(d/list.length*100):0;});
+  return `<div class="kpi-spark">${counts.map(c=>`<span style="height:${Math.max(6,c)}%" title="${c}% delivered"></span>`).join('')}</div>`;
+}
+
+function campaignStats(c){
+  const total=c.assets.length;
+  const delivered=c.assets.filter(a=>a.status==='Delivered').length;
+  const mad=new Date(c.brief.mad);
+  const late=c.assets.filter(a=>{if(a.status==='Delivered')return false;const m=milestoneFor(a.channel,a.assetType,a.description);const d=new Date(mad);d.setMonth(d.getMonth()-MILESTONE_MONTHS[m]);return daysBetween(new Date(),d)<0;}).length;
+  const kantar=c.assets.filter(a=>a.kantar).length;
+  const pct=total?Math.round(delivered/total*100):0;
+  return {total,delivered,late,kantar,pct,onTrack:total-delivered-late};
+}
+
+function renderReleaseTracking(){
+  let gTotal=0,gDeliv=0,gLate=0,gKantar=0;
+  state.campaigns.forEach(c=>{const s=campaignStats(c);gTotal+=s.total;gDeliv+=s.delivered;gLate+=s.late;gKantar+=s.kantar;});
+  const gPct=gTotal?Math.round(gDeliv/gTotal*100):0;
+  let html=`<div class="release-hero">
+    <div class="release-hero-bar"></div>
+    <div class="release-hero-top">
+      <div>
+        <div class="kpi-label">Total assets delivered — all campaigns</div>
+        <div class="release-big">${gDeliv}<small> / ${gTotal}</small></div>
+      </div>
+      <div style="text-align:right">
+        <div class="release-pct">${gPct}% delivered</div>
+        <div style="margin-top:10px;font-size:12px;color:var(--text-muted)">${state.campaigns.length} campaigns · ${gKantar} Kantar tested · <span style="color:var(--s-late);font-weight:700">${gLate} late</span></div>
+      </div>
+    </div>
+    <div class="release-progress"><div class="release-progress-fill" style="width:${gPct}%"></div></div>
+  </div>`;
+  html+=`<div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Campaigns</div><div class="kpi-value">${state.campaigns.length}</div><div class="kpi-trend">active in tracker</div></div>
+    <div class="kpi-card"><div class="kpi-label">Delivered</div><div class="kpi-value" style="color:var(--accent)">${gDeliv}</div><div class="kpi-trend up">${gPct}% of ${gTotal}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Late</div><div class="kpi-value" style="color:var(--s-late)">${gLate}</div><div class="kpi-trend ${gLate>0?'down':''}">need attention</div></div>
+    <div class="kpi-card"><div class="kpi-label">Kantar tested</div><div class="kpi-value" style="color:var(--s-shoot)">${gKantar}</div><div class="kpi-trend">${gTotal?Math.round(gKantar/gTotal*100):0}% of assets</div></div>
+  </div>`;
+  html+=`<div class="chart-title" style="margin:8px 0 14px;font-size:14px;font-weight:700">Progress by campaign</div>`;
+  state.campaigns.forEach(c=>{
+    const s=campaignStats(c);const [a1]=CATEGORY_ACCENT[c.brief.category]||CATEGORY_ACCENT['HAIRCARE'];
+    html+=`<div class="camp-track-card" onclick="switchCampaign('${c.id}');navigate('assets')">
+      <div class="camp-track-head">
+        <div><div class="camp-track-name">${escapeHtml(c.brief.name)}</div><div class="camp-track-meta">${c.brief.category} · MAD ${fmtDate(new Date(c.brief.mad))}</div></div>
+        <div style="font-size:20px;font-weight:800;color:${a1}">${s.pct}%</div>
+      </div>
+      <div class="camp-track-bar"><div class="camp-track-fill" style="width:${s.pct}%;background:${a1}"></div></div>
+      <div class="camp-stat-row"><span><b>${s.delivered}</b>/${s.total} delivered</span><span><b>${s.onTrack}</b> on track</span><span style="color:var(--s-late)"><b>${s.late}</b> late</span><span><b>${s.kantar}</b> Kantar</span></div>
+    </div>`;
+  });
+  document.getElementById('releaseContent').innerHTML=html;
+}
+
+/* ---- Kantar scorecard image (base64) ---- */
+function toggleKantarUpload(){const on=document.getElementById('edit-kantar').checked;document.getElementById('kantarUploadZone').classList.toggle('kantar-hidden-row',!on);}
+function handleKantarFile(e){const file=e.target.files[0];if(!file)return;if(!/image\/(png|jpe?g)/.test(file.type)){toast('⚠ PNG or JPG only');return;}if(file.size>4*1024*1024){toast('⚠ Image too large (max 4MB)');return;}const reader=new FileReader();reader.onload=ev=>{pendingKantarImage=ev.target.result;pendingKantarImageName=file.name;renderKantarPreview(pendingKantarImage,file.name);toast('✓ Scorecard loaded — save to confirm');};reader.readAsDataURL(file);}
+function renderKantarPreview(data,name){const el=document.getElementById('kantarPreview');if(!data){el.innerHTML='';return;}el.innerHTML=`<div class="kantar-preview"><img src="${data}" onclick="previewLightboxNow()" alt="scorecard"><div class="kantar-preview-actions"><button type="button" class="btn btn-sm btn-secondary" onclick="previewLightboxNow()">👁 View full</button><button type="button" class="btn btn-sm btn-danger" onclick="removeKantarImage()">🗑 Remove</button></div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">${escapeHtml(name||'scorecard')}</div></div>`;}
+function previewLightboxNow(){if(pendingKantarImage)openLightboxData(pendingKantarImage,'Kantar scorecard (unsaved)');}
+function removeKantarImage(){pendingKantarImage=null;pendingKantarImageName='';renderKantarPreview(null);toast('Scorecard removed — save to confirm');}
+
+/* ---- Lightbox ---- */
+function openLightboxData(data,cap){document.getElementById('lightboxImg').src=data;document.getElementById('lightboxCap').textContent=cap||'';document.getElementById('lightbox').classList.add('show');}
+function openKantarLightbox(id){const a=getCurrent().assets.find(x=>x.id===id);if(a&&a.kantarImage)openLightboxData(a.kantarImage,`${a.id} — Kantar scorecard`);}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('show');}
+
+/* ---- Version history ---- */
+function pushHistory(a,action,note){if(!Array.isArray(a.history))a.history=[];a.history.push({ts:new Date().toISOString(),action,status:a.status,note:note||''});}
+function openHistory(id){const a=getCurrent().assets.find(x=>x.id===id);if(!a)return;document.getElementById('historyAssetId').textContent=a.id;const items=[...(a.history||[])].reverse();const colors={'Brief':'var(--s-brief)','In Prep':'var(--s-prep)','Shooting':'var(--s-shoot)','In Post-Prod':'var(--s-post)','Validation':'var(--s-valid)','Delivered':'var(--s-deliv)','Late':'var(--s-late)'};document.getElementById('historyList').innerHTML=items.map((h,i)=>`<div class="history-item"><div class="history-dot" style="background:${colors[h.status]||'var(--text-soft)'}"></div><div class="history-body"><div class="history-action">${escapeHtml(h.action)}${h.status?` · <span style="color:var(--text-muted);font-weight:500">${h.status}</span>`:''}</div><div class="history-time">${new Date(h.ts).toLocaleString('fr-FR')}</div>${h.note?`<div class="history-note">${escapeHtml(h.note)}</div>`:''}</div></div>`).join('')||'<div style="color:var(--text-muted);font-size:13px">No history yet.</div>';document.getElementById('modalHistory').classList.add('show');}
+
+/* ---- Box auto-folder by GAR-ID ---- */
+async function autoCreateBoxFolder(){
+  const a=getCurrent().assets.find(x=>x.id===pendingEditId);if(!a)return;
+  const token=state.integrations.box.token;const parent=state.integrations.box.parentId||'0';
+  if(!token){toast('Add a Box token in Settings → Box integration (or paste a link manually)');navigate('settings');return;}
+  toast('Creating Box folder '+a.id+'…');
+  try{
+    const res=await fetch('https://api.box.com/2.0/folders',{method:'POST',headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({name:`${a.id} — ${a.description}`.slice(0,255),parent:{id:String(parent)}})});
+    if(res.status===409){const conflict=await res.json();const existId=conflict.context_info&&conflict.context_info.conflicts&&conflict.context_info.conflicts[0]&&conflict.context_info.conflicts[0].id;if(existId){await shareBoxFolder(token,existId,a);return;}throw new Error('Folder exists');}
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();await shareBoxFolder(token,data.id,a);
+  }catch(e){toast('⚠ Box error: '+e.message+' — paste link manually');}
+}
+async function shareBoxFolder(token,folderId,a){
+  try{const res=await fetch(`https://api.box.com/2.0/folders/${folderId}`,{method:'PUT',headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({shared_link:{access:'company'}})});const data=await res.json();const url=(data.shared_link&&data.shared_link.url)||`https://app.box.com/folder/${folderId}`;document.getElementById('edit-boxlink').value=url;a.boxFolderId=folderId;toast('✓ Box folder ready for '+a.id);}catch(e){toast('⚠ Box link error: '+e.message);}
+}
+
+/* ---- Clean client PDF (jsPDF) ---- */
+function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`)){res();return;}const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('load failed'));document.head.appendChild(s);});}
+async function exportClientPDF(){
+  toast('Building PDF…');
+  try{await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');}catch(e){toast('⚠ Could not load PDF engine — using Print instead');navigate('report');setTimeout(()=>window.print(),400);return;}
+  const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4'});const W=doc.internal.pageSize.getWidth();let y=56;
+  const [a1]=CATEGORY_ACCENT[getCurrent().brief.category]||CATEGORY_ACCENT['HAIRCARE'];const rgb=hexToRgb(a1);
+  doc.setFillColor(rgb.r,rgb.g,rgb.b);doc.rect(0,0,W,6,'F');
+  const isAgency=document.getElementById('page-release').classList.contains('active');
+  if(isAgency){
+    doc.setFontSize(10);doc.setTextColor(rgb.r,rgb.g,rgb.b);doc.text('PUBLICIS CONSEIL · AGENCY RELEASE REPORT',56,y);y+=26;
+    doc.setFontSize(22);doc.setTextColor(20,20,20);doc.text('All campaigns — delivery status',56,y);y+=30;
+    let gT=0,gD=0,gL=0,gK=0;state.campaigns.forEach(c=>{const s=campaignStats(c);gT+=s.total;gD+=s.delivered;gL+=s.late;gK+=s.kantar;});
+    doc.setFontSize(11);doc.setTextColor(90,90,90);doc.text(`${gD} of ${gT} assets delivered (${gT?Math.round(gD/gT*100):0}%) · ${gK} Kantar tested · ${gL} late · ${fmtDate(new Date())}`,56,y);y+=26;
+    state.campaigns.forEach(c=>{const s=campaignStats(c);if(y>760){doc.addPage();y=56;}doc.setTextColor(20,20,20);doc.setFontSize(13);doc.text(escapeForPdf(c.brief.name),56,y);doc.setTextColor(rgb.r,rgb.g,rgb.b);doc.text(`${s.pct}%`,W-90,y);y+=8;doc.setDrawColor(225,225,225);doc.setFillColor(240,240,240);doc.roundedRect(56,y,W-112,8,3,3,'F');doc.setFillColor(rgb.r,rgb.g,rgb.b);doc.roundedRect(56,y,(W-112)*s.pct/100,8,3,3,'F');y+=20;doc.setFontSize(9);doc.setTextColor(110,110,110);doc.text(`${s.delivered}/${s.total} delivered · ${s.onTrack} on track · ${s.late} late · ${s.kantar} Kantar`,56,y);y+=24;});
+  }else{
+    const c=getCurrent();const total=c.assets.length;const delivered=c.assets.filter(a=>a.status==='Delivered').length;const kantar=c.assets.filter(a=>a.kantar).length;
+    doc.setFontSize(10);doc.setTextColor(rgb.r,rgb.g,rgb.b);doc.text(`${escapeForPdf(c.brief.brand||'GARNIER')} · CAMPAIGN REPORT`,56,y);y+=26;
+    doc.setFontSize(22);doc.setTextColor(20,20,20);doc.text(escapeForPdf(c.brief.name),56,y);y+=24;
+    doc.setFontSize(11);doc.setTextColor(90,90,90);doc.text(`${c.brief.category} · ${total} assets · ${Math.round(delivered/total*100||0)}% delivered · ${kantar} Kantar · MAD ${fmtDate(new Date(c.brief.mad))}`,56,y);y+=28;
+    CHANNELS.forEach(ch=>{const list=c.assets.filter(a=>a.channel===ch);if(!list.length)return;if(y>740){doc.addPage();y=56;}doc.setFontSize(13);doc.setTextColor(rgb.r,rgb.g,rgb.b);doc.text(`${ch} · ${list.length}`,56,y);y+=18;doc.setFontSize(9);list.forEach(a=>{if(y>780){doc.addPage();y=56;}doc.setTextColor(20,20,20);doc.text(`${a.id}  ${a.region}  ${escapeForPdf(a.description).slice(0,52)}`,56,y);doc.setTextColor(a.kantar?155:200,a.kantar?89:200,a.kantar?182:200);doc.text(a.kantar?'KANTAR':'—',W-150,y);doc.setTextColor(110,110,110);doc.text(a.status,W-95,y);y+=15;});y+=8;});
+  }
+  doc.setFontSize(9);doc.setTextColor(150,150,150);doc.text(`Prepared by ${escapeForPdf(getCurrent().brief.lead||'Nicolas Lefebvre')} — Publicis Conseil — ${fmtDate(new Date())}`,56,820);
+  doc.save(`${isAgency?'publicis-agency':getCurrent().brief.name.replace(/[^a-z0-9]/gi,'-').toLowerCase()}-report.pdf`);
+  toast('✓ PDF downloaded');
+}
+function hexToRgb(h){const m=h.replace('#','');return{r:parseInt(m.slice(0,2),16),g:parseInt(m.slice(2,4),16),b:parseInt(m.slice(4,6),16)};}
+function escapeForPdf(s){return (s||'').replace(/[^\x00-\x7F]/g,'');}
+let pendingKantarImage=null;let pendingKantarImageName='';
+
+function renderAssets(){
+  const c=getCurrent();
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const fc=document.getElementById('filterCategory').value;
+  const fs=document.getElementById('filterStatus').value;
+  const fr=document.getElementById('filterRegion').value;
+  const fk=document.getElementById('filterKantar').checked;
+  const filtered=c.assets.filter(a=>{
+    if(fc&&a.category!==fc)return false;
+    if(fs&&a.status!==fs)return false;
+    if(fr&&a.region!==fr)return false;
+    if(fk&&!a.kantar)return false;
+    if(q){const hay=(a.id+' '+a.description+' '+a.heroProduct+' '+(a.talent||'')).toLowerCase();if(!hay.includes(q))return false;}
+    return true;
+  });
+  document.getElementById('assetsCount').textContent=`${filtered.length} of ${c.assets.length} assets · ${c.brief.name}`;
+  const groups={};CHANNELS.forEach(ch=>groups[ch]=[]);
+  filtered.forEach(a=>{if(!groups[a.channel])groups[a.channel]=[];groups[a.channel].push(a);});
+  let html='';
+  CHANNELS.forEach(channel=>{
+    const list=groups[channel]||[];if(list.length===0)return;
+    html+=`<div class="section-group"><div class="section-head" onclick="this.nextElementSibling.classList.toggle('collapsed')"><span>${channel}</span><span class="section-count">${list.length}</span></div><div class="section-body"><table><thead><tr><th>ID</th><th>Region</th><th>Type</th><th>Description</th><th>Hero</th><th>Format</th><th>Kantar</th><th>DLV</th><th>Days</th><th>Status</th><th></th></tr></thead><tbody>`;
+    list.forEach(a=>{
+      const dlv=dlvFor(a);const days=daysBetween(new Date(),dlv.date);
+      let daysClass='none',daysTxt='—';
+      if(!isNaN(days)){daysTxt=days>0?`+${days}d`:`${days}d`;
+        if(a.status==='Delivered')daysClass='ok';else if(days<0)daysClass='late';else if(days<=7)daysClass='soon';else daysClass='ok';}
+      const kantarCell=a.kantar?`<span class="kantar-badge">TEST</span>${a.kantarImage?`<span class="kantar-eye" title="View Kantar scorecard" onclick="openKantarLightbox('${a.id}')">👁</span>`:''}`:`<span class="kantar-badge dash">—</span>`;
+      html+=`<tr>
+        <td class="asset-id">${a.id}</td><td>${a.region}</td><td>${a.assetType}</td>
+        <td class="col-desc">${escapeHtml(a.description)}</td>
+        <td>${escapeHtml(a.heroProduct||'')}</td>
+        <td>${a.format} · ${a.duration}</td>
+        <td>${kantarCell}</td>
+        <td><div style="font-size:11px;color:var(--text-muted);font-weight:600">${dlv.milestone}</div><div style="font-size:11px">${fmtDate(dlv.date)}</div></td>
+        <td><span class="days-pill ${daysClass}">${daysTxt}</span></td>
+        <td><select class="status-select ${STATUS_CLASS[a.status]}" onchange="updateStatus('${a.id}',this.value)">${STATUS_LIST.map(s=>`<option ${s===a.status?'selected':''}>${s}</option>`).join('')}</select></td>
+        <td class="col-action"><button class="btn btn-sm btn-ghost" onclick="openHistory('${a.id}')" title="Version history" style="margin-right:2px">🕓</button>${a.boxLink?`<a class="box-pill" href="${a.boxLink}" target="_blank" title="Open Box folder" style="margin-right:4px">BOX</a>`:''}<button class="btn btn-sm btn-secondary" onclick="openEditModal('${a.id}')" title="Edit asset" style="margin-right:4px">✏️</button>${a.status!=='Delivered'?`<button class="btn btn-sm btn-primary" onclick="openDeliveredModal('${a.id}')">✓ Deliver</button>`:`<span style="color:var(--brand-dark);font-size:11px;font-weight:600">✓ Done</span>`}</td>
+      </tr>`;
+    });
+    html+=`</tbody></table></div></div>`;
+  });
+  if(!html)html=`<div class="form-card" style="text-align:center;color:var(--text-muted)">No assets match your filters.</div>`;
+  document.getElementById('assetsContainer').innerHTML=html;
+}
+function escapeHtml(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function updateStatus(id,status){const a=getCurrent().assets.find(x=>x.id===id);if(!a)return;const prev=a.status;a.status=status;a.lastUpdate=new Date().toISOString().slice(0,10);pushHistory(a,'Status changed','from '+prev+' to '+status);saveState();renderAssets();toast(`${id} → ${status}`);}
+
+function openDeliveredModal(id){pendingDeliveredId=id;const a=getCurrent().assets.find(x=>x.id===id);document.getElementById('deliveredAssetLabel').textContent=`${a.id} — ${a.description}`;document.getElementById('deliveredBoxLink').value=a.boxLink||'';document.getElementById('deliveredBoxFileId').value='';document.getElementById('modalDelivered').classList.add('show');setTimeout(()=>document.getElementById('deliveredBoxLink').focus(),50);}
+function confirmDelivered(){const a=getCurrent().assets.find(x=>x.id===pendingDeliveredId);if(!a)return;a.status='Delivered';a.boxLink=document.getElementById('deliveredBoxLink').value.trim();a.lastUpdate=new Date().toISOString().slice(0,10);saveState();closeModal('modalDelivered');renderAssets();toast(`✓ ${a.id} marked as Delivered`);}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+
+function openAddModal(){document.getElementById('add-kantar').checked=false;document.getElementById('modalAdd').classList.add('show');}
+function confirmAdd(){
+  const c=getCurrent();
+  const a=makeAsset(c.nextId++,
+    document.getElementById('add-category').value,
+    document.getElementById('add-region').value,
+    document.getElementById('add-channel').value,
+    document.getElementById('add-type').value,
+    document.getElementById('add-desc').value||'New asset',
+    document.getElementById('add-hero').value,
+    document.getElementById('add-format').value,
+    document.getElementById('add-duration').value,'',
+    document.getElementById('add-priority').value,
+    document.getElementById('add-status').value,
+    document.getElementById('add-kantar').checked);
+  c.assets.push(a);saveState();closeModal('modalAdd');renderAssets();
+  toast(`✓ ${a.id} added${a.kantar?' · Kantar test':''}`);
+}
+
+
+let pendingEditId = null;
+function openEditModal(id){
+  const a = getCurrent().assets.find(x=>x.id===id);
+  if(!a) return;
+  pendingEditId = id;
+  document.getElementById('editAssetId').textContent = a.id;
+  document.getElementById('edit-category').value = a.category || 'HAIRCARE';
+  document.getElementById('edit-region').value = a.region || 'EU';
+  document.getElementById('edit-channel').value = a.channel || 'Social';
+  document.getElementById('edit-type').value = a.assetType || 'Master';
+  document.getElementById('edit-desc').value = a.description || '';
+  document.getElementById('edit-hero').value = a.heroProduct || '';
+  document.getElementById('edit-format').value = a.format || '16x9';
+  document.getElementById('edit-duration').value = a.duration || 'n/a';
+  document.getElementById('edit-priority').value = a.priority || 'Medium';
+  document.getElementById('edit-talent').value = a.talent || '';
+  document.getElementById('edit-look').value = a.look || '';
+  document.getElementById('edit-shotat').value = a.shotAt || 'Other';
+  document.getElementById('edit-vo').value = a.voSound || 'n/a';
+  document.getElementById('edit-owner').value = a.owner || 'Publicis';
+  document.getElementById('edit-comments').value = a.comments || a.boxLink || '';
+  document.getElementById('edit-kantar').checked = !!a.kantar;
+  document.getElementById('edit-status').value = a.status || 'Brief';
+  document.getElementById('edit-boxlink').value = a.boxLink || '';
+  pendingKantarImage = a.kantarImage || null;
+  pendingKantarImageName = a.kantarImageName || '';
+  toggleKantarUpload();
+  renderKantarPreview(pendingKantarImage, pendingKantarImageName);
+  document.getElementById('modalEdit').classList.add('show');
+  setTimeout(()=>document.getElementById('edit-desc').focus(), 50);
+}
+function confirmEdit(){
+  const a = getCurrent().assets.find(x=>x.id===pendingEditId);
+  if(!a) return;
+  a.category    = document.getElementById('edit-category').value;
+  a.region      = document.getElementById('edit-region').value;
+  a.channel     = document.getElementById('edit-channel').value;
+  a.assetType   = document.getElementById('edit-type').value;
+  a.description = document.getElementById('edit-desc').value;
+  a.heroProduct = document.getElementById('edit-hero').value;
+  a.format      = document.getElementById('edit-format').value;
+  a.duration    = document.getElementById('edit-duration').value;
+  a.priority    = document.getElementById('edit-priority').value;
+  a.talent      = document.getElementById('edit-talent').value;
+  a.look        = document.getElementById('edit-look').value;
+  a.shotAt      = document.getElementById('edit-shotat').value;
+  a.voSound     = document.getElementById('edit-vo').value;
+  a.owner       = document.getElementById('edit-owner').value;
+  a.comments    = document.getElementById('edit-comments').value;
+  a.kantar      = document.getElementById('edit-kantar').checked;
+  a.status      = document.getElementById('edit-status').value;
+  a.boxLink     = document.getElementById('edit-boxlink').value.trim();
+  if(!a.kantar){a.kantarImage=null;a.kantarImageName='';}else{a.kantarImage=pendingKantarImage||null;a.kantarImageName=pendingKantarImageName||'';}
+  a.lastUpdate  = new Date().toISOString().slice(0,10);
+  pushHistory(a,'Edited', a.kantarImage?'incl. Kantar scorecard':'');
+  saveState();
+  closeModal('modalEdit');
+  renderAssets();
+  if(document.getElementById('page-dashboard').classList.contains('active')) renderDashboard();
+  toast(`✓ ${a.id} updated`);
+}
+function deleteAssetFromModal(){
+  const a = getCurrent().assets.find(x=>x.id===pendingEditId);
+  if(!a) return;
+  if(!confirm(`Delete ${a.id} (${a.description})?\nThis cannot be undone.`)) return;
+  const c = getCurrent();
+  c.assets = c.assets.filter(x=>x.id!==pendingEditId);
+  saveState();
+  closeModal('modalEdit');
+  renderAssets();
+  renderDashboard();
+  toast(`🗑 ${a.id} deleted`);
+}
+
+function openNewCampaignModal(){document.getElementById('nc-name').value='';document.getElementById('nc-category').value='HAIRCARE';const d=new Date();d.setMonth(d.getMonth()+5);document.getElementById('nc-mad').value=d.toISOString().slice(0,10);document.getElementById('nc-template').checked=true;document.getElementById('modalNewCampaign').classList.add('show');setTimeout(()=>document.getElementById('nc-name').focus(),50);}
+function confirmNewCampaign(){const name=document.getElementById('nc-name').value.trim();if(!name){toast('Please enter a campaign name');return;}const category=document.getElementById('nc-category').value;const mad=document.getElementById('nc-mad').value;const useTemplate=document.getElementById('nc-template').checked;const seed=useTemplate?TEMPLATE_ASSETS.map(r=>{r=[...r];r[0]=category;return r;}):[];const c=newCampaign(name,'Garnier',category,mad,seed);state.campaigns.push(c);state.activeCampaignId=c.id;saveState();closeModal('modalNewCampaign');renderAll();toast(`✓ Campaign "${name}" created`);}
+
+function autoFlagLate(){let count=0;getCurrent().assets.forEach(a=>{if(a.status!=='Delivered'&&a.status!=='Late'){const d=daysToDLV(a);if(!isNaN(d)&&d<0){a.status='Late';a.lastUpdate=new Date().toISOString().slice(0,10);count++;}}});saveState();renderAssets();toast(`⚠ ${count} asset(s) flagged as Late`);}
+function sendWeeklyRecap(){const c=getCurrent();const today=new Date();const weekAgo=new Date(today);weekAgo.setDate(weekAgo.getDate()-7);const delivered=c.assets.filter(a=>a.status==='Delivered'&&new Date(a.lastUpdate)>=weekAgo);const late=c.assets.filter(a=>a.status!=='Delivered'&&daysToDLV(a)<0);let body=`Bonjour,\n\nRecap hebdo — ${c.brief.name}\n\n`;body+=`=== DELIVERED CETTE SEMAINE (${delivered.length}) ===\n`;if(delivered.length===0)body+=`- Aucun livrable cette semaine.\n`;else delivered.forEach(a=>{body+=`- ${a.id}${a.kantar?' [KANTAR]':''} : ${a.description} (${a.channel}, ${a.region})\n`;});body+=`\n=== LATE À TRAITER (${late.length}) ===\n`;if(late.length===0)body+=`- Rien en retard.\n`;else late.forEach(a=>{body+=`- ${a.id}${a.kantar?' [KANTAR]':''} : ${a.description} (en retard de ${Math.abs(daysToDLV(a))}j)\n`;});body+=`\nBonne semaine,\nNicolas`;const subject=`Garnier Tracker - Recap ${c.brief.name} - ${today.toLocaleDateString('fr-FR')}`;const recipients=state.integrations.sendgrid.recipients||'';window.location.href=`mailto:${encodeURIComponent(recipients)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;}
+
+function renderBrief(){const c=getCurrent();Object.keys(c.brief).forEach(k=>{const el=document.getElementById('brief-'+k);if(el)el.value=c.brief[k]||'';});renderMilestones();}
+function renderMilestones(){const mads=['M-5','M-4','M-2','M-1','MAD'];const labels={'M-5':'POS','M-4':'E-com / Film Test','M-2':'Brand Page, Social, OOH','M-1':'Long Form Craft','MAD':'Mise À Disposition'};let html='';mads.forEach(m=>{const d=milestoneDate(m);const isMad=m==='MAD';html+=`<div class="milestone-card ${isMad?'mad':''}"><div class="milestone-label">${m}</div><div class="milestone-date">${fmtDate(d)}</div><div class="milestone-sub">${labels[m]}</div></div>`;});document.getElementById('milestoneGrid').innerHTML=html;}
+document.addEventListener('input',e=>{if(e.target.id&&e.target.id.startsWith('brief-')){const k=e.target.id.replace('brief-','');getCurrent().brief[k]=e.target.value;if(k==='mad')renderMilestones();if(k==='name')renderTopbar();renderTopbar();saveState();}if(['supabaseUrl','supabaseKey'].includes(e.target.id)){const k=e.target.id==='supabaseUrl'?'url':'key';state.integrations.supabase[k]=e.target.value.trim();saveState();}});
+
+function renderTimeline(){const cols=['M-5','M-4','M-2','M-1','MAD'];const labels={'M-5':'POS','M-4':'E-com / Film','M-2':'Brand Page / Social','M-1':'Craft TVC / Digital','MAD':'MAD'};const assets=getCurrent().assets;let html='';cols.forEach(m=>{const date=milestoneDate(m);const list=assets.filter(a=>dlvFor(a).milestone===m);html+=`<div class="timeline-col ${m==='MAD'?'mad':''}"><div class="timeline-col-header"><div class="timeline-col-label">${m}</div><div class="timeline-col-date">${fmtDate(date)}</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px">${labels[m]}</div></div>${list.map(a=>{const color=({'Brief':'var(--s-brief)','In Prep':'var(--s-prep)','Shooting':'var(--s-shoot)','In Post-Prod':'var(--s-post)','Validation':'var(--s-valid)','Delivered':'var(--s-deliv)','Late':'var(--s-late)'})[a.status];return `<div class="timeline-asset" title="${escapeHtml(a.description)}"><div class="timeline-asset-id">${a.id} · ${a.region}${a.kantar?' <span class=\"kantar-badge\" style=\"font-size:8px;padding:1px 4px\">K</span>':''}</div><div class="timeline-asset-desc">${escapeHtml(a.description.substring(0,50))}${a.description.length>50?'…':''}</div><div style="margin-top:4px"><span class="timeline-asset-dot" style="background:${color}"></span><span style="font-size:10px;color:var(--text-muted)">${a.status}</span></div></div>`;}).join('')}</div>`;});document.getElementById('timelineTrack').style.gridTemplateColumns=`repeat(5,1fr)`;document.getElementById('timelineTrack').innerHTML=html;}
+
+function renderReport(){
+  const c=getCurrent();
+  const total=c.assets.length;
+  const delivered=c.assets.filter(a=>a.status==='Delivered').length;
+  const late=c.assets.filter(a=>a.status!=='Delivered'&&daysToDLV(a)<0).length;
+  const onTrack=total-delivered-late;
+  const kantarCount=c.assets.filter(a=>a.kantar).length;
+  const pctDeliv=total>0?Math.round(delivered/total*100):0;
+  const today=new Date();
+  let html=`<div class="report-wrap">
+    <div class="report-brand-bar"></div>
+    <div class="report-cover">
+      <div class="report-eyebrow">${escapeHtml(c.brief.brand||'Garnier')} · Campaign Report</div>
+      <div class="report-title">${escapeHtml(c.brief.name)}</div>
+      <div class="report-subtitle">${escapeHtml(c.brief.category)}${c.brief.subbrand?' · '+escapeHtml(c.brief.subbrand):''}${c.brief.hero?' · '+escapeHtml(c.brief.hero):''}</div>
+      <div class="report-meta">
+        <div class="report-meta-item"><div class="report-meta-label">MAD date</div><div class="report-meta-value">${fmtDate(madDate())}</div></div>
+        <div class="report-meta-item"><div class="report-meta-label">Regions</div><div class="report-meta-value">${escapeHtml(c.brief.regions||'—')}</div></div>
+        <div class="report-meta-item"><div class="report-meta-label">Agency</div><div class="report-meta-value">${escapeHtml(c.brief.agency||'—')}</div></div>
+        <div class="report-meta-item"><div class="report-meta-label">Report date</div><div class="report-meta-value">${fmtDate(today)}</div></div>
+      </div>
+    </div>
+    <div class="report-section-title">Executive summary</div>
+    <div class="report-summary">
+      <div class="report-stat"><div class="report-stat-value">${total}</div><div class="report-stat-label">Total assets</div></div>
+      <div class="report-stat"><div class="report-stat-value" style="color:var(--brand-dark)">${pctDeliv}%</div><div class="report-stat-label">Delivered</div></div>
+      <div class="report-stat"><div class="report-stat-value" style="color:var(--s-post)">${onTrack}</div><div class="report-stat-label">On track</div></div>
+      <div class="report-stat"><div class="report-stat-value" style="color:var(--s-late)">${late}</div><div class="report-stat-label">Late</div></div>
+      <div class="report-stat"><div class="report-stat-value" style="color:var(--s-shoot)">${kantarCount}</div><div class="report-stat-label">Kantar tested</div></div>
+    </div>`;
+  CHANNELS.forEach(ch=>{
+    const list=c.assets.filter(a=>a.channel===ch);
+    if(list.length===0)return;
+    html+=`<div class="report-channel"><div class="report-channel-title">${ch} · ${list.length} asset${list.length>1?'s':''}</div>
+      <table class="report-table"><thead><tr><th>ID</th><th>Region</th><th>Description</th><th>Kantar</th><th>DLV</th><th>Status</th></tr></thead>
+      <tbody>${list.map(a=>{const dlv=dlvFor(a);return `<tr><td><b>${a.id}</b></td><td>${a.region}</td><td>${escapeHtml(a.description)}</td><td>${a.kantar?'<span class="kantar-badge">TEST</span>':'—'}</td><td>${dlv.milestone} · ${fmtDate(dlv.date)}</td><td><span class="status-pill ${STATUS_CLASS[a.status]}">${a.status}</span></td></tr>`;}).join('')}</tbody></table></div>`;
+  });
+  html+=`<div class="report-footer">Prepared by ${escapeHtml(c.brief.lead||'Nicolas Lefebvre')} — Publicis Conseil — ${fmtDate(today)}</div></div>`;
+  const kantarWithImg=c.assets.filter(a=>a.kantar&&a.kantarImage);
+  if(kantarWithImg.length){
+    html=html.replace('<div class="report-footer">',`<div class="report-section-title">Kantar scorecards · ${kantarWithImg.length}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:36px">${kantarWithImg.map(a=>`<div><div style="font-size:12px;font-weight:700;color:var(--s-shoot);margin-bottom:6px">${a.id} · ${escapeHtml(a.description)}</div><img class="report-kantar-img" src="${a.kantarImage}" alt="Kantar scorecard ${a.id}"></div>`).join('')}</div><div class="report-footer">`);
+  }
+  document.getElementById('reportContent').innerHTML=html;
+}
+
+function renderSettings(){renderCampaignList();loadIntegrationInputs();updateSyncDot();}
+function renderCampaignList(){let html='';state.campaigns.forEach(c=>{const isActive=c.id===state.activeCampaignId;html+=`<div class="campaign-list-item ${isActive?'active':''}"><div><div style="font-weight:600;font-size:13px">${escapeHtml(c.brief.name)}</div><div style="font-size:11px;color:var(--text-muted)">${c.brief.category} · ${c.assets.length} assets · MAD ${fmtDate(new Date(c.brief.mad))}</div></div><div style="display:flex;gap:6px">${!isActive?`<button class="btn btn-secondary btn-sm" onclick="switchCampaign('${c.id}')">Open</button>`:`<span style="font-size:11px;color:var(--brand-dark);font-weight:600;padding:0 8px;align-self:center">Active</span>`}<button class="btn btn-ghost btn-sm" onclick="renameCampaign('${c.id}')" title="Rename">✏️</button><button class="btn btn-ghost btn-sm" onclick="duplicateCampaign('${c.id}')" title="Duplicate">📋</button>${state.campaigns.length>1?`<button class="btn btn-ghost btn-sm" onclick="deleteCampaign('${c.id}')" title="Delete">🗑</button>`:''}</div></div>`;});document.getElementById('campaignList').innerHTML=html;}
+function renameCampaign(id){const c=state.campaigns.find(x=>x.id===id);if(!c)return;const name=prompt('New campaign name:',c.brief.name);if(!name)return;c.brief.name=name.trim();saveState();renderAll();toast('✓ Campaign renamed');}
+function duplicateCampaign(id){const src=state.campaigns.find(x=>x.id===id);if(!src)return;const copy=JSON.parse(JSON.stringify(src));copy.id='c_'+Math.random().toString(36).substr(2,9);copy.brief.name=src.brief.name+' (copy)';copy.createdAt=new Date().toISOString();state.campaigns.push(copy);saveState();renderAll();toast('✓ Campaign duplicated');}
+function deleteCampaign(id){if(state.campaigns.length<=1){toast('Cannot delete the last campaign');return;}const c=state.campaigns.find(x=>x.id===id);if(!c)return;if(!confirm(`Delete "${c.brief.name}"? This cannot be undone.`))return;state.campaigns=state.campaigns.filter(x=>x.id!==id);if(state.activeCampaignId===id)state.activeCampaignId=state.campaigns[0].id;saveState();renderAll();toast('✓ Campaign deleted');}
+
+function loadIntegrationInputs(){document.getElementById('supabaseUrl').value=state.integrations.supabase.url||'';document.getElementById('supabaseKey').value=state.integrations.supabase.key||'';document.getElementById('autoSyncToggle').checked=!!state.integrations.supabase.autoSync;document.getElementById('boxToken').value=state.integrations.box.token||'';document.getElementById('boxParentId').value=state.integrations.box.parentId||'0';document.getElementById('sgRecipients').value=state.integrations.sendgrid.recipients||'';document.getElementById('sgFrom').value=state.integrations.sendgrid.from||'';}
+function saveBoxToken(){state.integrations.box.token=document.getElementById('boxToken').value.trim();state.integrations.box.parentId=document.getElementById('boxParentId').value.trim()||'0';saveState();toast('✓ Box config saved');}
+function saveSendgridConfig(){state.integrations.sendgrid.recipients=document.getElementById('sgRecipients').value.trim();state.integrations.sendgrid.from=document.getElementById('sgFrom').value.trim();saveState();toast('✓ SendGrid config saved');}
+
+function updateSyncDot(status){const dot=document.getElementById('syncDot');dot.classList.remove('ok','err','pending');if(status)dot.classList.add(status);}
+async function pushToCloud(){const {url,key}=state.integrations.supabase;if(!url||!key){toast('Configure Supabase URL and key first');navigate('settings');return;}updateSyncDot('pending');try{const res=await fetch(`${url}/rest/v1/garnier_tracker_state`,{method:'POST',headers:{'apikey':key,'Authorization':`Bearer ${key}`,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({id:'shared',data:state,updated_at:new Date().toISOString()})});if(!res.ok)throw new Error(`HTTP ${res.status}: ${await res.text()}`);updateSyncDot('ok');document.getElementById('syncStatus').textContent=`Last push: ${new Date().toLocaleTimeString('fr-FR')}`;toast('✓ Pushed to cloud');}catch(e){updateSyncDot('err');document.getElementById('syncStatus').textContent='Push failed: '+e.message;toast('⚠ Sync error — check Supabase config');}}
+async function pullFromCloud(){const {url,key}=state.integrations.supabase;if(!url||!key){toast('Configure Supabase URL and key first');navigate('settings');return;}updateSyncDot('pending');try{const res=await fetch(`${url}/rest/v1/garnier_tracker_state?id=eq.shared&select=data`,{headers:{'apikey':key,'Authorization':`Bearer ${key}`}});if(!res.ok)throw new Error(`HTTP ${res.status}`);const arr=await res.json();if(arr.length===0){toast('No data in cloud yet — push first');updateSyncDot('err');return;}if(!confirm('This will overwrite your local data. Continue?')){updateSyncDot('ok');return;}const integrations=state.integrations;state=arr[0].data;state.integrations=integrations;saveState();renderAll();updateSyncDot('ok');document.getElementById('syncStatus').textContent=`Last pull: ${new Date().toLocaleTimeString('fr-FR')}`;toast('✓ Pulled from cloud');}catch(e){updateSyncDot('err');document.getElementById('syncStatus').textContent='Pull failed: '+e.message;toast('⚠ Pull error: '+e.message);}}
+function toggleAutoSync(checked){state.integrations.supabase.autoSync=checked;saveState();if(syncTimer){clearInterval(syncTimer);syncTimer=null;}if(checked){syncTimer=setInterval(()=>pushToCloud(),30000);toast('Auto-sync on (30s)');}else toast('Auto-sync off');}
+
+async function generateBoxLink(){const token=state.integrations.box.token;const fileId=document.getElementById('deliveredBoxFileId').value.trim();if(!token){toast('Add a Box token in Settings → Box integration');return;}if(!fileId){toast('Paste a Box File ID first');return;}toast('Generating Box link...');try{const res=await fetch(`https://api.box.com/2.0/files/${fileId}`,{method:'PUT',headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({shared_link:{access:'company'}})});if(!res.ok)throw new Error(`HTTP ${res.status}`);const data=await res.json();if(data.shared_link&&data.shared_link.url){document.getElementById('deliveredBoxLink').value=data.shared_link.url;toast('✓ Box link generated');}else throw new Error('No link returned');}catch(e){toast('⚠ Box error: '+e.message);}}
+
+function applyTheme(){document.documentElement.setAttribute('data-theme',state.theme);const icon=document.getElementById('themeIcon');if(state.theme==='dark'){icon.innerHTML='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';}else{icon.innerHTML='<circle cx="12" cy="12" r="5"/><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9l2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9l2.83-2.83"/>';}}
+function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';saveState();applyTheme();toast(`Switched to ${state.theme} mode`);}
+
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`garnier-tracker-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);toast('✓ Exported');}
+function importData(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{const ns=JSON.parse(ev.target.result);if(!ns.campaigns||!Array.isArray(ns.campaigns))throw new Error('Invalid file');state=ns;migrateAssets();saveState();renderAll();toast('✓ Data imported');}catch(err){alert('Invalid JSON file: '+err.message);}};reader.readAsText(file);}
+function resetData(){if(!confirm('Reset ALL campaigns? This cannot be undone.'))return;localStorage.removeItem(STORAGE_KEY);state=defaultState();migrateAssets();saveState();renderAll();toast('✓ All data reset');}
+
+function renderAll(){renderTopbar();renderDashboard();renderReleaseTracking();renderAssets();renderBrief();renderTimeline();renderReport();renderSettings();}
+document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');});});
+/* Drag & drop on Kantar upload zone */
+(function(){const z=document.getElementById('kantarUploadZone');if(!z)return;['dragenter','dragover'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.add('dragover');}));['dragleave','drop'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.remove('dragover');}));z.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)handleKantarFile({target:{files:[f]}});});})();
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+applyTheme();renderTopbar();renderDashboard();renderReleaseTracking();loadIntegrationInputs();
+if(state.integrations.supabase.autoSync){toggleAutoSync(true);}
+</script>
+<script>window.TRACKER_API="";window.TRACKER_TOKEN="";</script>
+<script src="/sync.js"></script>
+</body>
+</html>
